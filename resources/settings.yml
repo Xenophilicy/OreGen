@@ -1,0 +1,27 @@
+# MADE BY:
+#  __    __                                          __        __  __  __                     
+# /  |  /  |                                        /  |      /  |/  |/  |                    
+# $$ |  $$ |  ______   _______    ______    ______  $$ |____  $$/ $$ |$$/   _______  __    __ 
+# $$  \/$$/  /      \ /       \  /      \  /      \ $$      \ /  |$$ |/  | /       |/  |  /  |
+#  $$  $$<  /$$$$$$  |$$$$$$$  |/$$$$$$  |/$$$$$$  |$$$$$$$  |$$ |$$ |$$ |/$$$$$$$/ $$ |  $$ |
+#   $$$$  \ $$    $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |$$ |$$ |      $$ |  $$ |
+#  $$ /$$  |$$$$$$$$/ $$ |  $$ |$$ \__$$ |$$ |__$$ |$$ |  $$ |$$ |$$ |$$ |$$ \_____ $$ \__$$ |
+# $$ |  $$ |$$       |$$ |  $$ |$$    $$/ $$    $$/ $$ |  $$ |$$ |$$ |$$ |$$       |$$    $$ |
+# $$/   $$/  $$$$$$$/ $$/   $$/  $$$$$$/  $$$$$$$/  $$/   $$/ $$/ $$/ $$/  $$$$$$$/  $$$$$$$ |
+#                                         $$ |                                      /  \__$$ |
+#                                         $$ |                                      $$    $$/ 
+#                                         $$/                                        $$$$$$/
+
+# This is where you can set the chance of the player getting an ore, versus getting the default!
+# Example → 32 means for every 32 blocks mined, there is a chance an ore will spawn (essentially)
+Probability: 32
+
+# Here you list the blocks you want players to have a chance of getting!
+# Set any of them to false to disable their chance of being an outcome
+Coal: true
+Iron: true
+Gold: true
+Lapis: true
+Redstone: false
+Emerald: true
+Diamond: true
