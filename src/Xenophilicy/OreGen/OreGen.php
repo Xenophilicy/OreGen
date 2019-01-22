@@ -131,4 +131,3 @@ class OreGen extends PluginBase implements Listener{
         return true;
     }
 }
-?>
