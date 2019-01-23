@@ -16,38 +16,27 @@
 namespace Xenophilicy\OreGen;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
+use pocketmine\block\{Block,Water,Lava};
+use pocketmine\command\{Command,CommandSender};
 use pocketmine\Player;
 use pocketmine\utils\config;
 use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\Listener;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
-use pocketmine\block\Block;
-use pocketmine\block\Water;
-use pocketmine\block\Lava;
 
 class OreGen extends PluginBase implements Listener{
     
     private $config;
 
-    public function onLoad(){
+	public function onEnable(){
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder()."settings.yml", Config::YAML);
         $this->config->getAll();
-        $this->getLogger()->info("§eOreGen by §6Xenophilicy §eis loading...");
-    }
-
-	public function onEnable(){
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getLogger()->Info("§6OreGen§a has been enabled!");
+        $this->getLogger()->Info("OreGen has been enabled!");
 	}
 	
-    public function onDisable(){
-        $this->getLogger()->info("§6OreGen§c has been disabled!");   
-    }
-
     public function onBlockSet(BlockUpdateEvent $event) : bool{
         $block = $event->getBlock();
         $waterPresent = false;

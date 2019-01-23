@@ -1,5 +1,5 @@
 name: OreGen
 main: Xenophilicy\OreGen\OreGen
-version: 1.0.0
-api: [3.0.0, 3.5.1, 4.0.0]
+version: 1.0.1
+api: 3.0.0
 author: Xenophilicy
