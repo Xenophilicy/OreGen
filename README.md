@@ -1,4 +1,5 @@
 # OreGen
+[![](https://poggit.pmmp.io/shield.state/OreGen)](https://poggit.pmmp.io/p/OreGen)
 [![HitCount](http://hits.dwyl.io/Xenophilicy/OreGen.svg)](http://hits.dwyl.io/Xenophilicy/OreGen)
 ![](https://img.shields.io/discord/490677165289897995.svg?style=flat-square)
 
