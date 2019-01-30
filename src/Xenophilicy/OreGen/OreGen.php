@@ -34,7 +34,13 @@ class OreGen extends PluginBase implements Listener{
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML);
         $this->config->getAll();
-        $this->getLogger()->Info("OreGen has been enabled!");
+        if($this->config->get("Probability") < 1){
+            $this->getLogger()->critical("Probability must be set to a value above 1! Disabling plugin...");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+        }
+        else{
+            $this->getLogger()->Info("OreGen has been enabled!");
+        }
 	}
 	
     public function onBlockSet(BlockUpdateEvent $event) : bool{
