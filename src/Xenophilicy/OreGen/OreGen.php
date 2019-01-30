@@ -32,7 +32,7 @@ class OreGen extends PluginBase implements Listener{
 	public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->saveDefaultConfig();
-        $this->config = new Config($this->getDataFolder()."settings.yml", Config::YAML);
+        $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML);
         $this->config->getAll();
         $this->getLogger()->Info("OreGen has been enabled!");
 	}
@@ -42,12 +42,6 @@ class OreGen extends PluginBase implements Listener{
         $waterPresent = false;
         $lavaPresent = false;
         $defaultBlock = Block::get(Block::COBBLESTONE);
-        $coal = $this->config->get("Coal");
-        $iron = $this->config->get("Iron");
-        $gold = $this->config->get("Gold");
-        $lapis = $this->config->get("Lapis");
-        $emerald = $this->config->get("Emerald");
-        $diamond = $this->config->get("Diamond");
         if ($block == "Block[Cobblestone] (4:0)"){
             for ($target = 2; $target <= 5; $target++) {
                 $blockSide = $block->getSide($target);
@@ -61,7 +55,7 @@ class OreGen extends PluginBase implements Listener{
                     $pickBlock = mt_rand(1, $this->config->get("Probability"));
                     switch ($pickBlock) {
                         case 1:
-                            if($coal){
+                            if($this->config->get("Coal")){
                                 $placeBlock = Block::get(Block::COAL_ORE);
                             }
                             else{
@@ -69,7 +63,7 @@ class OreGen extends PluginBase implements Listener{
                             }
                             break;
                         case 2:
-                            if($iron){
+                            if($this->config->get("Iron")){
                             $placeBlock = Block::get(Block::IRON_ORE);
                             }
                             else{
@@ -77,7 +71,7 @@ class OreGen extends PluginBase implements Listener{
                             }
                             break;
                         case 3:
-                            if($gold){
+                            if($this->config->get("Gold")){
                             $placeBlock = Block::get(Block::GOLD_ORE);
                             }
                             else{
@@ -85,7 +79,7 @@ class OreGen extends PluginBase implements Listener{
                             }
                             break;
                         case 4:
-                            if($lapis){
+                            if($this->config->get("Lapis")){
                             $placeBlock = Block::get(Block::LAPIS_ORE);
                             }
                             else{
@@ -93,15 +87,23 @@ class OreGen extends PluginBase implements Listener{
                             }
                             break;
                         case 5:
-                            if($emerald){
-                            $placeBlock = Block::get(Block::EMERALD_ORE);
+                            if($this->config->get("Redstone")){
+                            $placeBlock = Block::get(Block::REDSTONE_ORE);
                             }
                             else{
                                 $placeBlock = $defaultBlock;
                             }
                             break;
                         case 6:
-                            if($diamond){
+                            if($this->config->get("Emerald")){
+                            $placeBlock = Block::get(Block::EMERALD_ORE);
+                            }
+                            else{
+                                $placeBlock = $defaultBlock;
+                            }
+                            break;
+                        case 7:
+                            if($this->config->get("Diamond")){
                             $placeBlock = Block::get(Block::DIAMOND_ORE);
                             }
                             else{
