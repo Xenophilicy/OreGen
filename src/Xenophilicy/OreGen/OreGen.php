@@ -28,26 +28,51 @@ use pocketmine\level\Level;
 class OreGen extends PluginBase implements Listener{
     
     private $config;
+    private $oreList = [];
 
 	public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML);
         $this->config->getAll();
-        if($this->config->get("Probability") < 1){
-            $this->getLogger()->critical("Probability must be set to a value above 1! Disabling plugin...");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-        }
-        else{
-            $this->getLogger()->Info("OreGen has been enabled!");
-        }
+        $this->getLogger()->info("OreGen has been enabled!");
+        $this->buildProbability();
 	}
-	
+
+    public function buildProbability() : bool{
+        $list = [];
+        $sum = 0;
+        $ores = ['Coal','Iron','Gold','Lapis','Redstone','Emerald','Diamond'];
+        foreach($ores as $ore){
+            $enabled = $this->config->getNested($ore.".Enabled");
+            if($enabled){
+                $chance = $this->config->getNested("$ore.Probability");
+                if(isset($chance)){
+                    $sum = $sum + $chance;
+                    for($i=0;$i<$chance;$i++){
+                        $this->oreList = array_push($list,$ore);
+                    }
+                }
+            }
+        }
+        for($i=0;$i<$this->config->get("Cobble-Probability");$i++){
+            $this->oreList = array_push($list,'Cobble');
+        }
+        $this->oreList = $list;
+        $sum = $sum + $this->config->get("Cobble-Probability");
+        if($sum != 100){
+            $this->getLogger()->critical("Ore probability has a sum of ".$sum);
+            $this->getLogger()->critical("Probability must have a sum equal to 100! Disabling plugin...");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return false;
+        }
+        return true;
+    }
+
     public function onBlockSet(BlockUpdateEvent $event) : bool{
         $block = $event->getBlock();
         $waterPresent = false;
         $lavaPresent = false;
-        $defaultBlock = Block::get(Block::COBBLESTONE);
         if ($block == "Block[Cobblestone] (4:0)"){
             for ($target = 2; $target <= 5; $target++) {
                 $blockSide = $block->getSide($target);
@@ -58,70 +83,33 @@ class OreGen extends PluginBase implements Listener{
                     $lavaPresent = true;
                 }
                 if ($waterPresent && $lavaPresent) {
-                    $pickBlock = mt_rand(1, $this->config->get("Probability"));
-                    switch ($pickBlock) {
-                        case 1:
-                            if($this->config->get("Coal")){
-                                $placeBlock = Block::get(Block::COAL_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 2:
-                            if($this->config->get("Iron")){
-                            $placeBlock = Block::get(Block::IRON_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 3:
-                            if($this->config->get("Gold")){
-                            $placeBlock = Block::get(Block::GOLD_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 4:
-                            if($this->config->get("Lapis")){
-                            $placeBlock = Block::get(Block::LAPIS_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 5:
-                            if($this->config->get("Redstone")){
-                            $placeBlock = Block::get(Block::REDSTONE_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 6:
-                            if($this->config->get("Emerald")){
-                            $placeBlock = Block::get(Block::EMERALD_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        case 7:
-                            if($this->config->get("Diamond")){
-                            $placeBlock = Block::get(Block::DIAMOND_ORE);
-                            }
-                            else{
-                                $placeBlock = $defaultBlock;
-                            }
-                            break;
-                        default:
-                            $placeBlock = $defaultBlock;
-                            break;
+                    $pb = array_rand($this->oreList,1);
+                    if($this->oreList[$pb] === "Coal"){
+                        $placeBlock = Block::get(Block::COAL_ORE);
                     }
-                $block->getLevel()->setBlock($block, $placeBlock, false, false);
-                return true;
+                    elseif($this->oreList[$pb] === "Iron"){
+                        $placeBlock = Block::get(Block::IRON_ORE);
+                    }
+                    elseif($this->oreList[$pb] === "Gold"){
+                        $placeBlock = Block::get(Block::GOLD_ORE);
+                    }
+                    elseif($this->oreList[$pb] === "Lapis"){
+                        $placeBlock = Block::get(Block::LAPIS_ORE);
+                    }
+                    elseif($this->oreList[$pb] === "Redstone"){
+                        $placeBlock = Block::get(Block::REDSTONE_ORE);
+                    }
+                    elseif($this->oreList[$pb] === "Emerald"){
+                        $placeBlock = Block::get(Block::EMERALD_ORE);
+                    }
+                    elseif($this->oreList[$pb] === "Diamond"){
+                        $placeBlock = Block::get(Block::DIAMOND_ORE);
+                    }
+                    else{
+                        $placeBlock = Block::get(Block::COBBLESTONE);
+                    }
+                    $block->getLevel()->setBlock($block, $placeBlock, false, false);
+                    return true;
                 }
             }
         }

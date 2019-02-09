@@ -13,7 +13,7 @@ With this plugin you are able to setup ores to spawn in a classic cobblestone ge
 
 ## OreGen Details
 * **API:** 3.5.0+
-* **Version:** 1.0.3
+* **Version:** 1.1.0
 * **Basic Description:** Generate ores inside a cobble generator!
 * *Easy to edit config.yml file*
 * *Simple code for editing and debugging*
