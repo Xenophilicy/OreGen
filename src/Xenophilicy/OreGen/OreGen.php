@@ -41,25 +41,36 @@ class OreGen extends PluginBase implements Listener{
 
     public function buildProbability() : bool{
         $list = [];
-        $sum = 0;
+        $cobbleProb = $this->config->get("Cobble-Probability");
+        if(!is_numeric($cobbleProb)){
+            $this->getLogger()->critical("Cobblestone probability must be numerical! Disabling plugin...");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return false;
+        }
+        for($i=0;$i<$cobbleProb;$i++){
+            $this->oreList = array_push($list,'Cobble');
+        }
+        $sum = $cobbleProb;
         $ores = ['Coal','Iron','Gold','Lapis','Redstone','Emerald','Diamond'];
         foreach($ores as $ore){
             $enabled = $this->config->getNested($ore.".Enabled");
-            if($enabled){
+            if($enabled === true){
                 $chance = $this->config->getNested("$ore.Probability");
-                if(isset($chance)){
+                if(is_numeric($chance)){
                     $sum = $sum + $chance;
                     for($i=0;$i<$chance;$i++){
                         $this->oreList = array_push($list,$ore);
                     }
                 }
+                else{
+                    $this->getLogger()->warning("Ore '".$ore."' has an invalid value, it will be disabled!");
+                }
+            }
+            elseif($enabled !== false){
+                $this->getLogger()->warning("Ore '".$ore."' has an invalid value, it will be disabled!");
             }
         }
-        for($i=0;$i<$this->config->get("Cobble-Probability");$i++){
-            $this->oreList = array_push($list,'Cobble');
-        }
         $this->oreList = $list;
-        $sum = $sum + $this->config->get("Cobble-Probability");
         if($sum != 100){
             $this->getLogger()->critical("Ore probability has a sum of ".$sum);
             $this->getLogger()->critical("Probability must have a sum equal to 100! Disabling plugin...");
