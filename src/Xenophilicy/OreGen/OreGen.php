@@ -17,13 +17,9 @@ namespace Xenophilicy\OreGen;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\block\{Block,Water,Lava};
-use pocketmine\command\{Command,CommandSender};
-use pocketmine\Player;
 use pocketmine\utils\config;
 use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\Listener;
-use pocketmine\item\Item;
-use pocketmine\level\Level;
 
 class OreGen extends PluginBase implements Listener{
     
@@ -36,6 +32,17 @@ class OreGen extends PluginBase implements Listener{
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML);
         $this->config->getAll();
         $this->getLogger()->info("OreGen has been enabled!");
+        $version = $this->config->get("VERSION");
+        if($version != "1.1.4"){
+            $this->getLogger()->warning("You have updated OreGen but are using an old config! Please delete your outdated config for new features to be enabled!");
+        }
+        if($this->config->get("World-List") !== null && $this->config->get("World-List") !== []){
+            if($this->config->get("List-Mode") == null || $this->config->get("List-Mode") == ""){
+                $this->getLogger()->error("The list mode cannot be left null! Please choose either 'Blacklist' or 'Whitelist'! Disabling plugin...");
+                $this->getServer()->getPluginManager()->disablePlugin($this);
+                return false;
+            }
+        }
         $this->buildProbability();
 	}
 
@@ -43,7 +50,7 @@ class OreGen extends PluginBase implements Listener{
         $list = [];
         $cobbleProb = $this->config->get("Cobble-Probability");
         if(!is_numeric($cobbleProb)){
-            $this->getLogger()->critical("Cobblestone probability must be numerical! Disabling plugin...");
+            $this->getLogger()->error("Cobblestone probability must be numerical! Disabling plugin...");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return false;
         }
@@ -72,15 +79,31 @@ class OreGen extends PluginBase implements Listener{
         }
         $this->oreList = $list;
         if($sum != 100){
-            $this->getLogger()->critical("Ore probability has a sum of ".$sum);
-            $this->getLogger()->critical("Probability must have a sum equal to 100! Disabling plugin...");
+            $this->getLogger()->error("Ore probability has a sum of ".$sum);
+            $this->getLogger()->error("Probability must have a sum equal to 100! Disabling plugin...");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return false;
         }
         return true;
     }
 
-    public function onBlockSet(BlockUpdateEvent $event) : bool{
+    public function onBlockSet(BlockUpdateEvent $event){
+        if($this->config->get("World-List") !== false){
+            if($this->config->get("List-Mode") == "Whitelist"){
+                if(!in_array($event->getBlock()->getLevel()->getName(), $this->config->get("World-List"))){
+                    return;
+                }
+            }
+            elseif($this->config->get("List-Mode") == "Blacklist"){
+                if(in_array($event->getBlock()->getLevel()->getName(), $this->config->get("World-List"))){
+                    return;
+                }
+            }
+        }
+        $this->blockSet($event);
+    }
+
+    public function blockSet($event){
         $block = $event->getBlock();
         $waterPresent = false;
         $lavaPresent = false;
@@ -95,35 +118,35 @@ class OreGen extends PluginBase implements Listener{
                 }
                 if ($waterPresent && $lavaPresent) {
                     $pb = array_rand($this->oreList,1);
-                    if($this->oreList[$pb] === "Coal"){
-                        $placeBlock = Block::get(Block::COAL_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Iron"){
-                        $placeBlock = Block::get(Block::IRON_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Gold"){
-                        $placeBlock = Block::get(Block::GOLD_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Lapis"){
-                        $placeBlock = Block::get(Block::LAPIS_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Redstone"){
-                        $placeBlock = Block::get(Block::REDSTONE_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Emerald"){
-                        $placeBlock = Block::get(Block::EMERALD_ORE);
-                    }
-                    elseif($this->oreList[$pb] === "Diamond"){
-                        $placeBlock = Block::get(Block::DIAMOND_ORE);
-                    }
-                    else{
-                        $placeBlock = Block::get(Block::COBBLESTONE);
+                    switch($this->oreList[$pb]){
+                        case "Coal":
+                            $placeBlock = Block::get(Block::COAL_ORE);
+                            break;
+                        case "Iron":
+                            $placeBlock = Block::get(Block::IRON_ORE);
+                            break;
+                        case "Gold":
+                            $placeBlock = Block::get(Block::GOLD_ORE);
+                            break;
+                        case "Lapis":
+                            $placeBlock = Block::get(Block::LAPIS_ORE);
+                            break;
+                        case "Redstone":
+                            $placeBlock = Block::get(Block::REDSTONE_ORE);
+                            break;
+                        case "Emerald":
+                            $placeBlock = Block::get(Block::EMERALD_ORE);
+                            break;
+                        case "Diamond":
+                            $placeBlock = Block::get(Block::DIAMOND_ORE);
+                            break;
+                        default:
+                            $placeBlock = Block::get(Block::COBBLESTONE);
                     }
                     $block->getLevel()->setBlock($block, $placeBlock, false, false);
                     return true;
                 }
             }
         }
-        return true;
     }
 }

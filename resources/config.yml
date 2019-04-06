@@ -11,6 +11,17 @@
 #                                         $$ |                                      /  \__$$ |
 #                                         $$ |                                      $$    $$/ 
 #                                         $$/                                        $$$$$$/
+VERSION: "1.1.4" # Internal use only
+
+
+# This is where you can put the list of worlds that you'd like to white/blacklist from using OreGen
+# Leave this blank if you want OreGen to function on all worlds
+World-List:
+  - "Lobby"
+  - "Spawn"
+
+# Choose the mode for the world list, options are "Blacklist" & "Whitelist"
+List-Mode: "Blacklist"
 
 # This is where you set the probability (out of 100) that the player will get the default cobblestone
 # The cobble probability and the selected ores must have a sum equal to 100 for the plugin to function
