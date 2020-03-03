@@ -86,7 +86,7 @@ class OreGen extends PluginBase implements Listener{
         $this->buildProbability();
 	}
 
-    private function buildProbability(){
+    private function buildProbability() : void{
         $cobbleProb = $this->config->get("Cobble-Probability");
         if(!is_numeric($cobbleProb)){
             $this->getLogger()->error("Cobblestone probability must be numerical, disabling plugin...");
@@ -148,7 +148,7 @@ class OreGen extends PluginBase implements Listener{
         }
     }
 
-    private function blockSet($event){
+    private function blockSet($event) : void{
         $block = $event->getBlock();
         $waterPresent = false;
         $lavaPresent = false;
@@ -164,9 +164,13 @@ class OreGen extends PluginBase implements Listener{
                     $event->setCancelled();
                     $pb = array_rand($this->probabilityList,1);
                     $values = explode(":",$this->probabilityList[$pb]);
-                    $block->getLevel()->setBlock($block, Block::get($values[0],$values[1]), false, false);
+                    $choice = Block::get((int)$values[0],isset($values[1]) ? (int)$values[1]:0);
+                    if($choice->getId() !== Block::COBBLESTONE){
+                        $block->getLevel()->setBlock($block, $choice, false, false);
+                    }   
                 }
             }
         }
+        return;
     }
 }
