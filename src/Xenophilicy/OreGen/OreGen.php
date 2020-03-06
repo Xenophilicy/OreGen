@@ -16,11 +16,13 @@
 namespace Xenophilicy\OreGen;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\block\{Block,Water,Lava};
+use pocketmine\block\Block;
+use pocketmine\block\BlockFactory;
 use pocketmine\command\{Command,CommandSender};
 use pocketmine\utils\{Config,TextFormat as TF};
-use pocketmine\event\block\BlockUpdateEvent;
+use pocketmine\event\block\BlockFormEvent;
 use pocketmine\event\Listener;
+use pocketmine\level\sound\FizzSound;
 
 class OreGen extends PluginBase implements Listener{
 
@@ -139,9 +141,9 @@ class OreGen extends PluginBase implements Listener{
         return true;
     }
 
-    public function onBlockUpdate(BlockUpdateEvent $event){
+    public function onCobblestoneForm(BlockFormEvent $event){
         $levelName = $event->getBlock()->getLevel()->getName();
-        if(($this->listMode == "wl" && !in_array($levelName,$this->levels)) ||($this->listMode == "bl" && in_array($levelName,$this->levels))){
+        if(($this->listMode == "wl" && !in_array($levelName,$this->levels)) || ($this->listMode == "bl" && in_array($levelName,$this->levels))){
             return;
         } else{
             $this->blockSet($event);
@@ -150,25 +152,15 @@ class OreGen extends PluginBase implements Listener{
 
     private function blockSet($event) : void{
         $block = $event->getBlock();
-        $waterPresent = false;
-        $lavaPresent = false;
-        if($block->getId() === Block::COBBLESTONE){
-            for($target = 2; $target <= 5; $target++){
-                $blockSide = $block->getSide($target);
-                if($blockSide instanceof Water){
-                    $waterPresent = true;
-                } elseif($blockSide instanceof Lava){
-                    $lavaPresent = true;
-                }
-                if($waterPresent && $lavaPresent){
-                    $event->setCancelled();
-                    $pb = array_rand($this->probabilityList,1);
-                    $values = explode(":",$this->probabilityList[$pb]);
-                    $choice = Block::get((int)$values[0],isset($values[1]) ? (int)$values[1]:0);
-                    if($choice->getId() !== Block::COBBLESTONE){
-                        $block->getLevel()->setBlock($block, $choice, false, false);
-                    }   
-                }
+        $cobbleInstance = BlockFactory::get(Block::COBBLESTONE);
+        if($event->getNewState() instanceof $cobbleInstance){
+            $randBlock = array_rand($this->probabilityList,1);
+            $values = explode(":",$this->probabilityList[$randBlock]);
+            $choice = Block::get((int)$values[0],isset($values[1]) ? (int)$values[1]:0);
+            if($choice->getId() !== Block::COBBLESTONE){
+                $event->setCancelled();
+                $block->getLevel()->setBlock($block, $choice, true, true);
+                $block->getLevel()->addSound(new FizzSound($block->asVector3()));
             }
         }
         return;
