@@ -25,6 +25,10 @@ use pocketmine\level\sound\FizzSound;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\{Config, TextFormat as TF};
 
+/**
+ * Class OreGen
+ * @package Xenophilicy\OreGen
+ */
 class OreGen extends PluginBase implements Listener {
     
     /**

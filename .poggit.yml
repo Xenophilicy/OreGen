@@ -4,4 +4,6 @@ branches:
 projects:
   OreGen:
     path: ""
+    lint:
+        phpstan: false
 ...
