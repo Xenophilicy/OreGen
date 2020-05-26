@@ -51,7 +51,7 @@ class OreGen extends PluginBase implements Listener {
      * @var string
      */
     private $listMode;
-
+    
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $configPath = $this->getDataFolder() . "config.yml";
@@ -100,7 +100,7 @@ class OreGen extends PluginBase implements Listener {
         }
         $this->buildProbability();
     }
-
+    
     private function buildProbability(): void{
         $cobbleProb = $this->config->get("Cobble-Probability");
         if(!is_numeric($cobbleProb)){
@@ -109,7 +109,7 @@ class OreGen extends PluginBase implements Listener {
             return;
         }
         for($i = 0; $i < $cobbleProb; $i++){
-            array_push($this->probabilityList, Block::COBBLESTONE);
+            array_push($this->probabilityList, (string)Block::COBBLESTONE . ":0");
         }
         $probSum = $cobbleProb;
         $blocks = $this->config->get("Blocks");
