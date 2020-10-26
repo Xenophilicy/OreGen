@@ -1,13 +1,6 @@
 name: OreGen
 author: Xenophilicy
-version: 1.2.5
+version: 1.2.6
 main: Xenophilicy\OreGen\OreGen
 api: 3.0.0
 description: Generate ores inside a cobble generator!
-commands:
-  oregen:
-    description: Get info on OreGen
-    permission: oregen.info
-permissions:
-  oregen.info:
-    default: op

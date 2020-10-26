@@ -20,7 +20,7 @@ Worlds:
   List:
     - "Lobby"
     - "Spawn"
-  
+
   # Choose the mode for the world list, options are blacklist, whitelist, or false
   # Set this to false if you want OreGen to function on all worlds
   Mode: "blacklist"
