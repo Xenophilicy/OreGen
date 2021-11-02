@@ -122,7 +122,7 @@ class OreGen extends PluginBase implements Listener {
     }
     
     public function onCobblestoneForm(BlockFormEvent $event): void{
-        $WorldName = $event->getBlock()->getWorld()->getName();
+        $worldName = $event->getBlock()->getPosition()->getWorld()->getName();
         if(($this->listMode == "wl" && !in_array($WorldName, $this->levels)) || ($this->listMode == "bl" && in_array($WorldName, $this->levels))) return;
         $block = $event->getBlock();
         if(!$event->getNewState() instanceof Cobblestone) return;
