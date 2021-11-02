@@ -1,6 +1,6 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Xenophilicy/OreGen
 branches:
-  - master
+  - PM4
 projects:
   OreGen:
     path: ""
