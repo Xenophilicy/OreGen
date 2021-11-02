@@ -27,4 +27,5 @@ With this plugin you can set up blocks to spawn in a classic cobblestone generat
 **DevTools → https://github.com/pmmp/PocketMine-DevTools** *(If you're running the plugin from source)*
 
 ## Credits
-* [Xenophilicy](https://github.com/Xenophilicy/)
+* [Xenophilicy](https://github.com/Xenophilicy/) (Original Developer)
+* [Vecnavium](https://github.com/Vecnavium/) (Lonterm Maintainer)
