@@ -17,11 +17,14 @@ declare(strict_types=1);
 namespace Xenophilicy\OreGen;
 
 use pocketmine\block\Block;
+use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Cobblestone;
+use pocketmine\block\BlockFactory;
 use pocketmine\event\block\BlockFormEvent;
 use pocketmine\event\Listener;
-use pocketmine\level\sound\FizzSound;
+use pocketmine\world\sound\FizzSound;
 use pocketmine\plugin\PluginBase;
+use pocketmine\world\WorldManager;
 
 /**
  * Class OreGen
@@ -40,7 +43,7 @@ class OreGen extends PluginBase implements Listener {
     /** @var string */
     private $listMode;
     
-    public function onEnable(){
+    public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->saveDefaultConfig();
         $version = $this->getConfig()->get("VERSION");
@@ -69,7 +72,7 @@ class OreGen extends PluginBase implements Listener {
         if($this->listMode !== false){
             $worldList = $this->getConfig()->getNested("Worlds.List");
             foreach($worldList as $world){
-                if(!$this->getServer()->isLevelGenerated($world)){
+                if(!$this->getServer()->getWorldManager()->isWorldGenerated($world)){
                     $this->getLogger()->critical("Invalid world name! Name: " . $world . " was not found, disabling plugin! Be sure you use the name of the world folder for the world name in the config!");
                     $this->getServer()->getPluginManager()->disablePlugin($this);
                     return;
@@ -89,14 +92,14 @@ class OreGen extends PluginBase implements Listener {
             return;
         }
         for($i = 0; $i < $cobbleProb; $i++){
-            array_push($this->probabilityList, (string)Block::COBBLESTONE . ":0");
+            array_push($this->probabilityList, (string)BlockLegacyIds::COBBLESTONE . ":0");
         }
         $probSum = $cobbleProb;
         $blocks = $this->getConfig()->get("Blocks");
         foreach($blocks as $block => $probability){
             $values = explode(":", $block);
             try{
-                Block::get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
+                BlockFactory::getInstance()->get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
             }catch(\InvalidArgumentException $e){
                 $this->getLogger()->critical("Invalid block! Block " . $block . " was not found, it will be disabled!");
                 continue;
@@ -119,15 +122,15 @@ class OreGen extends PluginBase implements Listener {
     }
     
     public function onCobblestoneForm(BlockFormEvent $event): void{
-        $levelName = $event->getBlock()->getLevel()->getName();
-        if(($this->listMode == "wl" && !in_array($levelName, $this->levels)) || ($this->listMode == "bl" && in_array($levelName, $this->levels))) return;
+        $WorldName = $event->getBlock()->getWorld()->getName();
+        if(($this->listMode == "wl" && !in_array($WorldName, $this->levels)) || ($this->listMode == "bl" && in_array($WorldName, $this->levels))) return;
         $block = $event->getBlock();
         if(!$event->getNewState() instanceof Cobblestone) return;
         $index = array_rand($this->probabilityList, 1);
         $values = explode(":", $this->probabilityList[$index]);
         $choice = Block::get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
         $event->setCancelled();
-        $block->getLevel()->setBlock($block, $choice, true, true);
-        $block->getLevel()->addSound(new FizzSound($block->add(0.5, 0.5, 0.5), 2.6 + (lcg_value() - lcg_value()) * 0.8));
+        $block->getWorld()->setBlock($block, $choice, true, true);
+        $block->getWorld()->addSound(new FizzSound($block->add(0.5, 0.5, 0.5), 2.6 + (lcg_value() - lcg_value()) * 0.8));
     }
 }
