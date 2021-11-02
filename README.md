@@ -28,5 +28,5 @@ With this plugin you can set up blocks to spawn in a classic cobblestone generat
 
 ## Credits
 * [Xenophilicy](https://github.com/Xenophilicy/) (Original Developer)
-* [Vecnavium](https://github.com/Vecnavium/) (Lonterm Maintainer)
+* [Vecnavium](https://github.com/Vecnavium/) (Longterm Maintainer)
 
