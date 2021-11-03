@@ -128,7 +128,7 @@ class OreGen extends PluginBase implements Listener {
         if(!$event->getNewState() instanceof Cobblestone) return;
         $index = array_rand($this->probabilityList, 1);
         $values = explode(":", $this->probabilityList[$index]);
-        $choice = BlockFactory::get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
+        $choice = BlockFactory::getInstance()->get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
         $event->setCancelled();
         $block->getWorld()->setBlock($block, $choice, true, true);
         $block->getWorld()->addSound(new FizzSound($block->add(0.5, 0.5, 0.5), 2.6 + (lcg_value() - lcg_value()) * 0.8));
