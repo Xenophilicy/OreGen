@@ -130,7 +130,7 @@ class OreGen extends PluginBase implements Listener {
         $values = explode(":", $this->probabilityList[$index]);
         $choice = BlockFactory::getInstance()->get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
         $event->cancel();
-        $block->getPosition()->getWorld()->setBlock($block->getPosition(), $choice, true, true);
+        $block->getPosition()->getWorld()->setBlock($block->getPosition(), $choice, true);
         $block->getPosition()->getWorld()->addSound($block->getPosition()->add(0.5, 0.5, 0.5), new FizzSound());
     }
 }
