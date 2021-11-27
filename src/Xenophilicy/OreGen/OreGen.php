@@ -125,12 +125,12 @@ class OreGen extends PluginBase implements Listener {
         $worldName = $event->getBlock()->getPosition()->getWorld()->getFolderName();
         if(($this->listMode == "wl" && !in_array($worldName, $this->levels)) || ($this->listMode == "bl" && in_array($worldName, $this->levels))) return;
         $block = $event->getBlock();
-        if(!$event->getNewState() instanceof Cobblestone) return;
+        if($event->getNewState()->getId() !== 4) return;
         $index = array_rand($this->probabilityList, 1);
         $values = explode(":", $this->probabilityList[$index]);
         $choice = BlockFactory::getInstance()->get((int)$values[0], isset($values[1]) ? (int)$values[1] : 0);
-        $event->setCancelled();
-        $block->getWorld()->setBlock($block, $choice, true, true);
-        $block->getWorld()->addSound(new FizzSound($block->add(0.5, 0.5, 0.5), 2.6 + (lcg_value() - lcg_value()) * 0.8));
+        $event->cancel();
+        $block->getPosition()->getWorld()->setBlock($block->getPosition(), $choice, true, true);
+        $block->getPosition()->getWorld()->addSound($block->getPosition()->add(0.5, 0.5, 0.5), new FizzSound());
     }
 }
