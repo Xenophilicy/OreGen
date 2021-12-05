@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/Xenophilicy/OreGen"><img src="https://github.com/Xenophilicy/OreGen/blob/master/icon.png"></img></a><br>
-    <b>PocketMine plugin to spawn ores in a cobblestone generator!</b>
+<b>PocketMine plugin to spawn ores in a cobblestone generator!</b>
 </p>
 
 <p align="center">
