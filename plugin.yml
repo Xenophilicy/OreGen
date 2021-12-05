@@ -1,6 +1,6 @@
 name: OreGen
 author: Xenophilicy
-version: 1.2.6
+version: 2.0.0
 main: Xenophilicy\OreGen\OreGen
 api: 4.0.0
 description: Generate ores inside a cobble generator!
