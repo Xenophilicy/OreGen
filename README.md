@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/Xenophilicy/OreGen"><img src="https://github.com/Xenophilicy/OreGen/blob/master/icon.png"></img></a><br>
-    <bNPocketMine plugin to spawn ores in a cobblestone generator!</b>
+<b>PocketMine plugin to spawn ores in a cobblestone generator!</b>
 </p>
 
 <p align="center">
@@ -33,4 +33,3 @@ With this plugin you can set up blocks to spawn in a classic cobblestone generat
 ## Credits
 * [Xenophilicy](https://github.com/Xenophilicy/) (Original Developer)
 * [Vecnavium](https://github.com/Vecnavium/) (Longterm Maintainer)
-
